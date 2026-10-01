@@ -1,0 +1,89 @@
+:root {
+    --bg-color: #f5f5f7; 
+    --stub-bg: #FFE066;
+    --stub-ratio: 30; /* 新增：副券比例变量 */
+}
+
+body { margin: 0; padding: 0; background-color: var(--bg-color); font-family: 'Noto Sans SC', sans-serif; overscroll-behavior: none; }
+.app-container { display: flex; height: 100vh; flex-direction: row; }
+.preview-area { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; position: relative; }
+.control-panel { width: 320px; background: white; padding: 20px; box-shadow: -2px 0 10px rgba(0,0,0,0.05); overflow-y: auto; box-sizing: border-box; z-index: 100; }
+
+@media (max-width: 768px) {
+    .app-container { flex-direction: column; }
+    .preview-area { flex: 1; min-height: 50vh; }
+    .control-panel { width: 100%; height: 50vh; }
+}
+
+.control-group { margin-bottom: 15px; }
+.control-group label { display: block; font-size: 13px; color: #555; }
+.control-group input[type="range"] { width: 100%; margin-top: 5px; }
+.flex-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.flex-group > * { flex: 1; min-width: 100px; margin-bottom: 5px !important; }
+
+.button-group button, .action-btn { display: block; width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 6px; text-align: center; font-size: 14px; transition: 0.2s; }
+.button-group button.active { background: #007bff; color: white; border-color: #007bff; }
+.upload-btn { background: #28a745; color: white; border: none; font-weight: bold; }
+.export-btn { background: #ff9800; color: white; border: none; font-weight: bold; }
+
+.mode-tabs { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; background: #e0e0e0; padding: 5px; border-radius: 20px; z-index: 10;}
+.mode-tabs button { padding: 8px 16px; border: none; border-radius: 15px; cursor: pointer; background: transparent; font-weight: bold; color: #555; transition: 0.3s; }
+.mode-tabs button.active { background: white; color: #000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.drag-tip { position: absolute; bottom: 20px; font-size: 13px; color: #888; }
+
+/* 核心容器 */
+.ticket {
+    width: var(--ticket-w, 500px); height: var(--ticket-h, 300px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    position: relative; overflow: hidden;
+    display: flex; /* 支撑单双图 */
+}
+
+/* 解决全图拖动卡顿的关键：让背景图片和副券区域放弃鼠标事件 */
+.image-area, .stub-area { pointer-events: none; transition: 0.3s; }
+
+/* 背景比例动态计算 */
+.image-area { background-image: url('https://picsum.photos/800/600'); background-size: cover; background-position: center; }
+.stub-area { background-color: var(--stub-bg); }
+
+.single-mode .image-area { width: 100%; height: 100%; }
+.single-mode .stub-area { display: none; }
+
+.double-mode .image-area { width: calc(100% - var(--stub-ratio) * 1%); height: 100%; border-right: 2px dashed rgba(0,0,0,0.1); box-sizing: border-box; }
+.double-mode .stub-area { width: calc(var(--stub-ratio) * 1%); height: 100%; display: block; }
+
+/* 外边框遮罩 */
+.straight { border-radius: 0; -webkit-mask-image: none; }
+.rounded { border-radius: 20px; -webkit-mask-image: none; }
+.inverse-rounded { border-radius: 0; --r: 15px; -webkit-mask-image: radial-gradient(circle at 0 0, transparent var(--r), black calc(var(--r) + 0.5px)), radial-gradient(circle at 100% 0, transparent var(--r), black calc(var(--r) + 0.5px)), radial-gradient(circle at 0 100%, transparent var(--r), black calc(var(--r) + 0.5px)), radial-gradient(circle at 100% 100%, transparent var(--r), black calc(var(--r) + 0.5px)); -webkit-mask-size: 51% 51%; -webkit-mask-position: top left, top right, bottom left, bottom right; -webkit-mask-repeat: no-repeat; }
+.stamp { border-radius: 0; --r: 5px; --gap: 15px; -webkit-mask-image: linear-gradient(black, black), radial-gradient(circle at center, transparent var(--r), black calc(var(--r) + 0.5px)); -webkit-mask-size: calc(100% - var(--r) * 2) calc(100% - var(--r) * 2), var(--gap) var(--gap); -webkit-mask-position: center, calc(var(--gap) / 2 * -1) calc(var(--gap) / 2 * -1); -webkit-mask-repeat: no-repeat, round; }
+
+/* 内部互动元素 */
+.draggable-item { position: absolute; z-index: 10; touch-action: none; }
+
+.tear-notch { cursor: ew-resize; }
+.tear-notch.vertical { height: 100%; width: 0; border-left: 2px dashed #999; top: 0; left: 70%; }
+.tear-notch.vertical::before, .tear-notch.vertical::after { content: ''; position: absolute; width: 24px; height: 24px; background-color: var(--bg-color); border-radius: 50%; left: -13px; }
+.tear-notch.vertical::before { top: -12px; }
+.tear-notch.vertical::after { bottom: -12px; }
+
+.tear-notch.horizontal { width: 100%; height: 0; border-top: 2px dashed #999; left: 0; top: 50%; cursor: ns-resize;}
+.tear-notch.horizontal::before, .tear-notch.horizontal::after { content: ''; position: absolute; width: 24px; height: 24px; background-color: var(--bg-color); border-radius: 50%; top: -13px; }
+.tear-notch.horizontal::before { left: -12px; }
+.tear-notch.horizontal::after { right: -12px; }
+
+.perf-line-holes { background-image: radial-gradient(circle, var(--bg-color) 3px, transparent 3.5px); background-size: 15px 15px; }
+.perf-line-holes.vertical { height: 100%; width: 15px; top: 0; left: 50%; background-repeat: repeat-y; cursor: ew-resize; }
+.perf-line-holes.horizontal { width: 100%; height: 15px; left: 0; top: 50%; background-repeat: repeat-x; cursor: ns-resize; }
+
+.punch-hole { width: 20px; height: 20px; border-radius: 50%; background-color: var(--bg-color); cursor: move; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); transform: translate(-50%, -50%); }
+.punch-hole.large { width: 40px; height: 40px; }
+
+/* 文本框：彻底重构坐标系，中心点对齐 */
+.text-box {
+    font-size: 24px; color: #000; white-space: nowrap; font-weight: bold;
+    border: 1px dashed transparent; cursor: move; user-select: none;
+    transform: translate(-50%, -50%) rotate(0deg); /* 中心对齐，完美支持旋转 */
+    transform-origin: center center; z-index: 20;
+}
+.text-box:focus { border-color: #007bff; outline: none; cursor: text; user-select: text;}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>终极纪念票根生成器 V2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;700&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 预览区 -->
+        <div class="preview-area">
+            <div class="mode-tabs">
+                <button id="tab-single" class="active">单图模式</button>
+                <button id="tab-double">双图模式 (带副券)</button>
+            </div>
+            
+            <div id="ticket-container" class="ticket straight single-mode">
+                <div class="image-area"></div>
+                <div class="stub-area"></div>
+            </div>
+            <p class="drag-tip">💡 提示：双击元素可旋转，拖出外框可删除。点击文字可编辑。</p>
+        </div>
+
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <h2>通用设置</h2>
+            <div class="control-group flex-group">
+                <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                <label for="image-upload" class="action-btn upload-btn">📷 上传图片</label>
+                <button id="export-btn" class="action-btn export-btn">💾 导出 PNG</button>
+            </div>
+
+            <div class="control-group">
+                <label>宽度: <span id="w-val">500</span>px</label>
+                <input type="range" id="width-slider" min="200" max="800" value="500">
+                <label>高度: <span id="h-val">300</span>px</label>
+                <input type="range" id="height-slider" min="200" max="800" value="300">
+            </div>
+
+            <!-- 新增：副券专属控制 -->
+            <div id="stub-controls" class="control-group" style="display: none; background: #f8f9fa; padding: 10px; border-radius: 8px;">
+                <label>副券底色:</label>
+                <input type="color" id="stub-color" value="#FFE066" style="width: 100%; height: 30px; margin: 5px 0;">
+                <label>副券比例: <span id="stub-ratio-val">30</span>%</label>
+                <input type="range" id="stub-slider" min="10" max="90" value="30">
+            </div>
+
+            <h2>添加内部元素</h2>
+            <div class="button-group flex-group">
+                <button id="add-text-btn" class="action-btn">📝 添加文字</button>
+                <button id="add-tear-notch" class="action-btn" style="background:#e3f2fd">✂️ 凹槽撕折线</button>
+                <button id="add-holes-line" class="action-btn">打孔圆线</button>
+                <button id="add-punch-hole" class="action-btn">检票大孔</button>
+            </div>
+
+            <h2>文字设置 (选中文字后生效)</h2>
+            <div class="control-group">
+                <select id="font-select" style="width: 100%; padding: 5px; margin-bottom: 5px;">
+                    <option value="'Noto Sans SC', sans-serif">思源黑体 (标准)</option>
+                    <option value="'Ma Shan Zheng', cursive">马善政毛笔楷体</option>
+                    <option value="'ZCOOL KuaiLe', sans-serif">站酷快乐体</option>
+                </select>
+                <input type="color" id="text-color" value="#000000" style="width: 100%; height: 30px;">
+            </div>
+
+            <h2>外边框样式</h2>
+            <div class="button-group">
+                <button data-style="straight">直角</button>
+                <button data-style="rounded">圆角</button>
+                <button data-style="inverse-rounded" class="active">反向圆角</button>
+                <button data-style="stamp">邮票齿孔</button>
+            </div>
+        </div>
+    </div>
+    <script src="assets/app.js"></script>
+</body>
+</html>
