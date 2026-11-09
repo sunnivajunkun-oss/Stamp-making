@@ -1,0 +1,102 @@
+[
+  {
+    "id": "sans",
+    "name": "系统黑体",
+    "family": "sans-serif"
+  },
+  {
+    "id": "serif",
+    "name": "系统宋体 / 衬线体",
+    "family": "serif"
+  },
+  {
+    "id": "wencang",
+    "name": "问藏书房",
+    "family": "WenCang",
+    "source": "./fonts/问藏书房.woff"
+  },
+  {
+    "id": "zhushi-bold",
+    "name": "杨任东竹石体 Bold",
+    "family": "YRDZSTBold",
+    "source": "./fonts/杨任东竹石体-Bold.woff"
+  },
+  {
+    "id": "youshe-title",
+    "name": "优设标题黑",
+    "family": "YouSheBiaoTiHei",
+    "source": "./fonts/优设标题黑.woff"
+  },
+  {
+    "id": "youshe-body",
+    "name": "优设好身体",
+    "family": "YouSheHaoShenTi",
+    "source": "./fonts/优设好身体.woff"
+  },
+  {
+    "id": "arkhip",
+    "name": "Arkhip (英文)",
+    "family": "Arkhip",
+    "source": "./fonts/Arkhip_font.wofff"
+  },
+  {
+    "id": "daffeniy",
+    "name": "Daffeniy (英文)",
+    "family": "Daffeniy",
+    "source": "./fonts/Daffeniy.wofff"
+  },
+  {
+    "id": "diranista",
+    "name": "Diranista (英文)",
+    "family": "Diranista",
+    "source": "./fonts/Diranista-Regular.woff"
+  },
+  {
+    "id": "far-out",
+    "name": "Far Out (英文)",
+    "family": "FarOut",
+    "source": "./fonts/far-out.woff"
+  },
+  {
+    "id": "koliko-bold",
+    "name": "Koliko Bold (英文)",
+    "family": "KolikoBold",
+    "source": "./fonts/koliko-Bold.woff"
+  },
+  {
+    "id": "misto",
+    "name": "Misto (英文)",
+    "family": "Misto",
+    "source": "./fonts/Misto.woff"
+  },
+  {
+    "id": "modak",
+    "name": "Modak (英文)",
+    "family": "Modak",
+    "source": "./fonts/Modak-Regular-2.woff"
+  },
+  {
+    "id": "mosk-800",
+    "name": "Mosk Extra-Bold (英文)",
+    "family": "MoskExtraBold",
+    "source": "./fonts/Mosk Extra-Bold 800.woff"
+  },
+  {
+    "id": "mosk-100",
+    "name": "Mosk Thin (英文)",
+    "family": "MoskThin",
+    "source": "./fonts/Mosk Thin 100.woff"
+  },
+  {
+    "id": "repair-light",
+    "name": "Repair Light (英文)",
+    "family": "RepairLight",
+    "source": "./fonts/Repair-Light.woff"
+  },
+  {
+    "id": "repair-reg",
+    "name": "Repair Regular (英文)",
+    "family": "RepairRegular",
+    "source": "./fonts/Repair-Regular.woff"
+  }
+]

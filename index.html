@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#faf9f6">
+  <title>Stamp making</title>
+  <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#">
+    <span class="brand-mark">S</span>
+    <span>Stamp making <small>MAKE A LITTLE MEMORY</small></span>
+  </a>
+  <span class="edition">把喜欢，留在方寸之间。</span>
+  <button class="primary" id="export-top">生成图片 ↗</button>
+</header>
+
+<main>
+  <section class="workspace">
+    <div class="workspace-heading">
+      <span class="eyebrow">YOUR LITTLE KEEPSAKE</span>
+      <div class="segmented" id="mode">
+        <button data-mode="single" aria-pressed="true">邮票 / 单图</button>
+        <button data-mode="double" aria-pressed="false">带副券</button>
+      </div>
+    </div>
+    <div id="stage">
+      <div class="paper">
+        <canvas id="preview" tabindex="0" aria-label="作品预览。选中图片时可拖动和双指缩放；选中元素后可拖动。"></canvas>
+        <div id="selection" hidden></div>
+      </div>
+    </div>
+    <div class="canvas-caption">
+      <span id="dimensions">500 × 300 px</span>
+      <span>透明 PNG · 所见即所得</span>
+    </div>
+    <div class="stage-tools">
+      <button id="image-mode" class="active">↔ 调整图片</button>
+      <button id="reset-image">居中复位</button>
+      <label class="zoom-label">缩放 <input id="zoom" type="range" min="1" max="5" step=".01" value="1"><output id="zoom-value">100%</output></label>
+    </div>
+    <p class="hint" id="gesture-hint">拖动图片调整构图 · 双指缩放</p>
+  </section>
+
+  <aside class="panel" id="control-panel">
+    <!-- 手机端专属：底部抽屉顶部抓手栏 -->
+    <div class="drawer-header" id="drawer-header">
+      <div class="drawer-pill"></div>
+      <div class="drawer-bar">
+        <span class="drawer-title"><strong>画面效果</strong> <small>改动立即生效，上方即预览</small></span>
+        <button type="button" class="drawer-toggle" id="drawer-toggle">收起 ▾</button>
+      </div>
+    </div>
+
+    <div class="panel-scroll">
+      <div class="panel-title">
+        <div><span class="eyebrow">MAKE IT YOURS</span><h1>制作你的邮票</h1></div>
+        <span class="pill lilac">自由创作</span>
+      </div>
+
+      <label class="upload" for="image-upload">
+        <span class="upload-icon">＋</span>
+        <span><strong>放入一张喜欢的照片</strong><small>选择图片，开始构图</small></span>
+        <span>↗</span>
+      </label>
+      <input id="image-upload" type="file" accept="image/*" hidden>
+
+      <nav class="section-tabs">
+        <button data-section="layout" aria-selected="true">尺寸与边框</button>
+        <button data-section="elements" aria-selected="false">文字与装饰</button>
+      </nav>
+
+      <div id="section-layout">
+        <div class="field-heading">画面尺寸 <span>px · 可拉动滑块或输入</span></div>
+        <div class="dimensions-fields">
+          <label>宽度<input id="width" type="number" min="80" max="2000" value="500"></label>
+          <span>×</span>
+          <label>高度<input id="height" type="number" min="80" max="2000" value="300"></label>
+        </div>
+        <div class="dimension-sliders">
+          <label class="range-row">宽度拉条 <input id="width-range" type="range" min="80" max="2000" value="500"><output id="width-value">500 px</output></label>
+          <label class="range-row">高度拉条 <input id="height-range" type="range" min="80" max="2000" value="300"><output id="height-value">300 px</output></label>
+        </div>
+        <div class="presets">
+          <button data-size="500,300">横向票根</button>
+          <button data-size="300,450">竖向邮票</button>
+          <button data-size="500,120">眼神长条</button>
+          <button data-size="400,400">正方形</button>
+        </div>
+
+        <div class="field-heading">边框样式 <span>8 款花边</span></div>
+        <div id="borders" class="border-grid">
+          <button data-border="straight"><i>▭</i>直角</button>
+          <button data-border="rounded"><i>▢</i>圆角</button>
+          <button data-border="inverse-rounded"><i>⌑</i>内凹圆角</button>
+          <button data-border="stamp" aria-pressed="true"><i>▧</i>邮票齿孔</button>
+          <button data-border="scallop"><i>☁</i>扇贝波浪</button>
+          <button data-border="lace"><i>❁</i>珍珠蕾丝</button>
+          <button data-border="zigzag"><i>⚡</i>复古锯齿</button>
+          <button data-border="vintage"><i>❖</i>古典疏齿</button>
+        </div>
+
+        <div id="stub-settings" hidden>
+          <div class="field-heading">副券设置 <input aria-label="副券颜色" id="stub-color" type="color" value="#f3ecd6"></div>
+          <label class="range-row">副券比例 <input id="stub-ratio" type="range" min="10" max="90" value="30"><output id="stub-value">30%</output></label>
+        </div>
+
+        <div class="paper-settings">
+          <div class="field-heading">邮票纸边 <span>0 = 满图剪裁</span></div>
+          <label class="range-row">纸边宽度<input id="paper-width" type="range" min="0" max="60" value="0"><output id="paper-width-value">0 px</output></label>
+          <label class="color-title">纸边颜色<input id="paper-color" type="color" value="#ffffff"></label>
+          <p class="subtle">纸边向内留出，成品宽高不变；小尺寸自动限制纸边宽度。</p>
+        </div>
+
+        <label class="range-row export-scale">导出倍率
+          <select id="export-scale">
+            <option value="1">1× 原始尺寸</option>
+            <option value="2" selected>2× 清晰</option>
+            <option value="3">3× 高清</option>
+          </select>
+        </label>
+        <p class="subtle">网点和选中边框只辅助编辑，不会出现在成品中。</p>
+      </div>
+
+      <div id="section-elements" hidden>
+        <div class="element-buttons">
+          <button data-add="text" class="lilac">T 添加文字</button>
+          <button data-add="tear">⌁ 凹槽撕折线</button>
+          <button data-add="perf">⋮ 打孔圆线</button>
+          <button data-add="hole">○ 检票圆孔</button>
+        </div>
+        <div id="element-list" class="element-list"></div>
+        <div id="element-editor" hidden>
+          <div class="field-heading">选中元素 <span id="element-name"></span></div>
+          <div id="text-controls">
+            <label>文字内容<textarea id="text" rows="2" maxlength="500"></textarea></label>
+            <label>内置字体<select id="font"></select></label>
+            <div class="text-options">
+              <label>字号<input id="font-size" type="number" min="8" max="200" value="28"></label>
+              <label>颜色<input id="text-color" type="color" value="#222222"></label>
+            </div>
+            <p id="font-status" class="subtle" role="status"></p>
+          </div>
+          <div class="element-actions">
+					  <button id="vertical">↕ 竖排</button>
+            <button id="rotate">旋转 90°</button>
+            <button id="hole-size">切换孔径</button>
+            <button id="delete" class="danger">删除元素</button>
+          </div>
+        </div>
+        <p class="subtle">点选列表中的元素，再在预览里拖动位置。键盘方向键可微调。</p>
+      </div>
+
+      <footer class="panel-footer">
+        <button id="export" class="primary">生成我的邮票 <span>↗</span></button>
+        <p id="status" role="status" aria-live="polite">照片仅在当前页面处理</p>
+      </footer>
+    </div>
+  </aside>
+</main>
+
+<div id="export-dialog" class="modal" role="dialog" aria-modal="true" aria-labelledby="export-title" hidden>
+  <div class="modal-card">
+    <div class="modal-heading">
+      <div><span class="eyebrow">READY TO KEEP</span><h2 id="export-title">你的邮票，已生成</h2></div>
+      <button id="close-export" aria-label="关闭">✕</button>
+    </div>
+    <div class="result-background"><img id="result" alt="生成的透明背景邮票"></div>
+    <p id="result-info"></p>
+    <div class="save-actions"><button id="save-album" class="primary" disabled>保存到相册</button></div>
+    <p id="save-status" role="status">生成后点击保存，按平台提示允许相册权限。</p>
+    <details>
+      <summary>保存遇到问题？</summary>
+      <p>若保存失败，请保留作品并截图下方诊断信息反馈。拒绝授权时，请检查小红书的相册权限后重试。</p>
+      <pre id="diagnostics"></pre>
+    </details>
+  </div>
+</div>
+
+<script src="./assets/fonts.js"></script>
+<script src="./assets/album.js"></script>
+<script src="./assets/app.js"></script>
+</body>
+</html>
